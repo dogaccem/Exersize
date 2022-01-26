@@ -998,33 +998,65 @@ const products = [
     }
 ]
 
+// const express = require('express');
+// const app = express();
+
+// const hostname = '127.0.0.1';
+// const port = 8080;
+
+// app.get('/api/products', function(req,res){
+//     res.json(products);  
+// })
+
+// app.get('/api/products/:id',function(req,res) {
+//     var productId = req.params.id;
+//     var product = products.find(p => p.id == productId);
+//     if(product != null && product != undefined)
+//         res.json(product);
+//     else
+//         res.status(404).json({'message':"Could'nt find"})
+// })
+
+// app.get('/api/products/category/:id',function(req,res){
+//     let categoryId = req.params.id;
+//     let filteredProducts = products.filter(p => p.categoryId == categoryId);
+//     if(filteredProducts != null && filteredProducts != undefined)
+//         res.json(filteredProducts);
+//     else
+//         res.status(404).json({'message':"Could'nt find"})
+
+// })
+
+// app.listen(port, hostname, () => {
+//   console.log(`Server running at http://${hostname}:${port}/`);
+// });
+
 const express = require('express');
+const _ = require('lodash');
 const app = express();
 
 const hostname = '127.0.0.1';
 const port = 8080;
 
-app.get('/api/products', function(req,res){
-    res.json(products);  
+app.get('/api/products',function(req,res)
+{
+    let orderBy = req.query.orderBy;
+    if(orderBy == undefined)
+        res.json(products);
+    else if(orderBy == 'asc'){
+        productsASC = _.orderBy(products,['name'],['asc']);
+        res.json(productsASC);
+    }
+    else if(orderBy == 'desc'){
+        productsDESC = _.orderBy(products,['name'],['desc']);
+        res.json(productsDESC);
+    }
+
 })
-
-app.get('/api/products/:id',function(req,res) {
-    var productId = req.params.id;
-    var product = products.find(p => p.id == productId);
-    if(product != null && product != undefined)
-        res.json(product);
-    else
-        res.status(404).json({'message':"Could'nt find"})
-})
-
-app.get('/api/products/category/:id',function(req,res){
-    let categoryId = req.params.id;
-    let filteredProducts = products.filter(p => p.categoryId == categoryId);
-    if(filteredProducts != null && filteredProducts != undefined)
-        res.json(filteredProducts);
-    else
-        res.status(404).json({'message':"Could'nt find"})
-
+app.get('/api/products/:id',function(req,res)
+{
+    let productId = req.params.id;
+    let product = products.find(p=>p.id==productId);
 })
 
 app.listen(port, hostname, () => {
